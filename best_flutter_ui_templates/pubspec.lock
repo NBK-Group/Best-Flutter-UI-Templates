@@ -138,9 +138,11 @@ packages:
   ss_bottom_navbar:
     dependency: "direct main"
     description:
-      name: ss_bottom_navbar
-      url: "https://pub.dartlang.org"
-    source: hosted
+      path: "."
+      ref: "0.0.10+2"
+      resolved-ref: f3fae003c5110e7b7ca0d3ec5269d2e4105585bd
+      url: "https://github.com/NBK-Group/ss_bottom_navbar.git"
+    source: git
     version: "0.0.10"
   stack_trace:
     dependency: transitive
