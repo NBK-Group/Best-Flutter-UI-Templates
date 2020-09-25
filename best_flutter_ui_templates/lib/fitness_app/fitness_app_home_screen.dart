@@ -1,6 +1,7 @@
 import 'package:best_flutter_ui_templates/fitness_app/models/tabIcon_data.dart';
 import 'package:best_flutter_ui_templates/fitness_app/traning/training_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:ss_bottom_navbar/ss_bottom_navbar.dart';
 import 'bottom_navigation_view/bottom_bar_view.dart';
 import 'fintness_app_theme.dart';
 import 'my_diary/my_diary_screen.dart';
@@ -69,38 +70,48 @@ class _FitnessAppHomeScreenState extends State<FitnessAppHomeScreen>
     return true;
   }
 
+  var items = [
+    SSBottomNavItem(text: 'Home', iconData: Icons.home),
+    SSBottomNavItem(text: 'Store', iconData: Icons.store),
+    SSBottomNavItem(text: 'Add', iconData: Icons.add, isIconOnly: true),
+    SSBottomNavItem(text: 'Explore', iconData: Icons.explore),
+    SSBottomNavItem(text: 'Profile', iconData: Icons.person),
+  ];
+
   Widget bottomBar() {
     return Column(
       children: <Widget>[
         const Expanded(
           child: SizedBox(),
         ),
-        BottomBarView(
-          tabIconsList: tabIconsList,
-          addClick: () {},
-          changeIndex: (int index) {
-            if (index == 0 || index == 2) {
-              animationController.reverse().then<dynamic>((data) {
-                if (!mounted) {
-                  return;
-                }
-                setState(() {
-                  tabBody =
-                      MyDiaryScreen(animationController: animationController);
+        SSBottomNav(
+            items: items,
+            color: Colors.black,
+            selectedColor: Colors.white,
+            unselectedColor: Colors.black,
+            onTabSelected: (index) {
+              if (index == 0 || index == 2) {
+                animationController.reverse().then<dynamic>((data) {
+                  if (!mounted) {
+                    return;
+                  }
+                  setState(() {
+                    tabBody =
+                        MyDiaryScreen(animationController: animationController);
+                  });
                 });
-              });
-            } else if (index == 1 || index == 3) {
-              animationController.reverse().then<dynamic>((data) {
-                if (!mounted) {
-                  return;
-                }
-                setState(() {
-                  tabBody =
-                      TrainingScreen(animationController: animationController);
+              } else if (index == 1 || index == 3) {
+                animationController.reverse().then<dynamic>((data) {
+                  if (!mounted) {
+                    return;
+                  }
+                  setState(() {
+                    tabBody =
+                        TrainingScreen(animationController: animationController);
+                  });
                 });
-              });
+              }
             }
-          },
         ),
       ],
     );
