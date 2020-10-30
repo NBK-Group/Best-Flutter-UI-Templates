@@ -33,7 +33,7 @@ dependencies:
   ss_bottom_navbar:
     git:
       url: https://github.com/NBK-Group/ss_bottom_navbar.git
-      ref: 0.0.10+2
+      ref: Anil
   intl: ^0.16.0
 
 dev_dependencies:
