@@ -1,6 +1,7 @@
 import 'package:best_flutter_ui_templates/fitness_app/models/tabIcon_data.dart';
 import 'package:best_flutter_ui_templates/fitness_app/traning/training_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:ss_bottom_navbar/ss_bottom_navbar.dart';
 import 'bottom_navigation_view/bottom_bar_view.dart';
 import 'fintness_app_theme.dart';
@@ -11,8 +12,7 @@ class FitnessAppHomeScreen extends StatefulWidget {
   _FitnessAppHomeScreenState createState() => _FitnessAppHomeScreenState();
 }
 
-class _FitnessAppHomeScreenState extends State<FitnessAppHomeScreen>
-    with TickerProviderStateMixin {
+class _FitnessAppHomeScreenState extends State<FitnessAppHomeScreen> with TickerProviderStateMixin {
   AnimationController animationController;
 
   List<TabIconData> tabIconsList = TabIconData.tabIconsList;
@@ -21,6 +21,8 @@ class _FitnessAppHomeScreenState extends State<FitnessAppHomeScreen>
     color: FitnessAppTheme.background,
   );
 
+  SSBottomBarState _state;
+
   @override
   void initState() {
     tabIconsList.forEach((TabIconData tab) {
@@ -28,9 +30,9 @@ class _FitnessAppHomeScreenState extends State<FitnessAppHomeScreen>
     });
     tabIconsList[0].isSelected = true;
 
-    animationController = AnimationController(
-        duration: const Duration(milliseconds: 600), vsync: this);
+    animationController = AnimationController(duration: const Duration(milliseconds: 600), vsync: this);
     tabBody = MyDiaryScreen(animationController: animationController);
+    _state = SSBottomBarState();
     super.initState();
   }
 
@@ -42,26 +44,31 @@ class _FitnessAppHomeScreenState extends State<FitnessAppHomeScreen>
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: FitnessAppTheme.background,
-      child: Scaffold(
-        backgroundColor: Colors.transparent,
-        body: FutureBuilder<bool>(
-          future: getData(),
-          builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-            if (!snapshot.hasData) {
-              return const SizedBox();
-            } else {
-              return Stack(
-                children: <Widget>[
-                  tabBody,
-                  bottomBar(),
-                ],
-              );
-            }
-          },
-        ),
-      ),
+    return ChangeNotifierProvider(
+      create: (_) => _state,
+      builder: (context, child) {
+        return Container(
+          color: FitnessAppTheme.background,
+          child: Scaffold(
+            backgroundColor: Colors.transparent,
+            body: FutureBuilder<bool>(
+              future: getData(),
+              builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+                if (!snapshot.hasData) {
+                  return const SizedBox();
+                } else {
+                  return Stack(
+                    children: <Widget>[
+                      tabBody,
+                      bottomBar(),
+                    ],
+                  );
+                }
+              },
+            ),
+          ),
+        );
+      },
     );
   }
 
@@ -85,33 +92,32 @@ class _FitnessAppHomeScreenState extends State<FitnessAppHomeScreen>
           child: SizedBox(),
         ),
         SSBottomNav(
-            items: items,
-            color: Colors.black,
-            selectedColor: Colors.white,
-            unselectedColor: Colors.black,
-            onTabSelected: (index) {
-              if (index == 0 || index == 2) {
-                animationController.reverse().then<dynamic>((data) {
-                  if (!mounted) {
-                    return;
-                  }
-                  setState(() {
-                    tabBody =
-                        MyDiaryScreen(animationController: animationController);
-                  });
-                });
-              } else if (index == 1 || index == 3) {
-                animationController.reverse().then<dynamic>((data) {
-                  if (!mounted) {
-                    return;
-                  }
-                  setState(() {
-                    tabBody =
-                        TrainingScreen(animationController: animationController);
-                  });
-                });
-              }
-            }
+          state: _state,
+          items: items,
+          color: Colors.black,
+          selectedColor: Colors.white,
+          unselectedColor: Colors.black,
+          // onTabSelected: (index) {
+          //   if (index == 0 || index == 2) {
+          //     animationController.reverse().then<dynamic>((data) {
+          //       if (!mounted) {
+          //         return;
+          //       }
+          //       setState(() {
+          //         tabBody = MyDiaryScreen(animationController: animationController);
+          //       });
+          //     });
+          //   } else if (index == 1 || index == 3) {
+          //     animationController.reverse().then<dynamic>((data) {
+          //       if (!mounted) {
+          //         return;
+          //       }
+          //       setState(() {
+          //         tabBody = TrainingScreen(animationController: animationController);
+          //       });
+          //     });
+          //   }
+          // }
         ),
       ],
     );
